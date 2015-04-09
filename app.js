@@ -25,7 +25,12 @@ var init = function init() {
 };
 
 var executeCommands = function executeCommands() {
-	switch(command) {
+	if(!command) {
+		getTasks();
+		return;
+	}
+
+	switch( command.toLowerCase() ) {
 		case "ls":
 			getTasks();
 			break;
@@ -39,7 +44,7 @@ var executeCommands = function executeCommands() {
 			removeTask();
 			break;
 
-		case "X":
+		case "x":
 		case "close":
 			closeTask();
 			break;
