@@ -1,7 +1,7 @@
 
 var fs = require('fs'),
 	_ = require('underscore'),
-	taskFile = "REPLACEWITHLOCATIONOFYOURJSON/tasks.json",
+	taskFile = "PATHTOTASKS.JSON/tasks.json",
 	tasks,
 	command = process.argv[2],
 	passedData = process.argv[3],
@@ -27,7 +27,7 @@ var init = function init() {
 var executeCommands = function executeCommands() {
 	switch(command) {
 		case "ls":
-			listTasks();
+			getTasks();
 			break;
 
 		case "add":
@@ -43,7 +43,7 @@ var executeCommands = function executeCommands() {
 			break;
 
 		default:
-			listTasks();
+			getTasks();
 			break;
 	}
 };
@@ -64,7 +64,7 @@ var exit = function exit() {
  * @param {String} data
  * @return {undefined}
  */
-var readTasks = function getTasks(err, data) {
+var readTasks = function readTasks(err, data) {
 	tasks = JSON.parse(data);
 
 	var sortedTasks = _.sortBy(tasks, function(task) { return parseInt(task.id, 10); });
@@ -84,31 +84,56 @@ var writeTasks = function writeTasks() {
 };
 
 /**
- * List all tasks
+ * Get all tasks
  *
  * @return {undefined}
  */
-var listTasks = function listTasks() {
+var getTasks = function getTasks() {
 	
-	var taskList = tasks;
+	var taskList;
 
-	if(passedData !== "a" && passedData !== "all") {
-		taskList = _.where(tasks, {open: true});
+	if(passedData == "a" || passedData == "all") {
+		taskList = tasks;
+
+		for(var i=0; i<taskList.length; i++) {
+			var task = taskList[i];
+			getTask(task);
+		}
+	}
+	else if(parseInt(passedData, 10) > -1) {
+		taskList = findTaskByID( parseInt(passedData, 10) );
+
+		if(taskList) {
+			taskList = taskList.subTasks;
+		}
+		else {
+			taskList = [];
+		}
+
+		for(var i=0; i<taskList.length; i++) {
+			var taskID = taskList[i];
+			var task = findTaskByID(taskID);
+			task && getTask(task);
+		}
+	}
+	else {
+		taskList = _.where(tasks, {open: true, subTask: false});
+
+		for(var i=0; i<taskList.length; i++) {
+			var task = taskList[i];
+			getTask(task);
+		}
 	}
 
-	for(var i=0; i<taskList.length; i++) {
-		var task = taskList[i];
-		listTask(task);
-	}
 };
 
 /**
- * List a single task
+ * Get a single task
  *
  * @param {object} task
  * @return {undefined}
  */
-var listTask = function listTask(task) {
+var getTask = function getTask(task) {
 	var openClosed = "";
 
 	if(!task.open) {
@@ -118,6 +143,12 @@ var listTask = function listTask(task) {
 	console.log(openClosed + "  " + task.id + " - " + task.name);
 	task.description && console.log("	" + task.description);
 	task.dueDate && console.log("	" + task.dueDate);
+};
+
+var findTaskByID = function findTaskByID(taskID) {
+	var task = _.findWhere(tasks, {id: taskID});
+
+	return task;
 };
 
 /**
@@ -146,18 +177,38 @@ var parseInputData = function parseInputData(data) {
  * @return {undefined}
  */
 var addTask = function addTask() {
+	var subTaskList,
+		parsedData,
+		subTask = false;
+
 	if(passedData !== undefined) {
-		var parsedData = parseInputData(passedData);
+		if(parseInt(passedData,10) > -1) {
+			subTaskList = findTaskByID(parseInt(passedData,10)).subTasks;
+
+			// If we passed a number instead of data, use the 5th argument and add it as a subtask
+			parsedData = parseInputData(process.argv[4]);
+			subTask = true;
+		}
+		else {
+			parsedData = parseInputData(passedData);
+		}
+
 
 		var newTask = _.clone(defaultTask)
 		_.extend(newTask, parsedData);
 
 		newTask.dateAdded = Date.now();
 		newTask.id = largestID + 1;
+		newTask.subTask = subTask;
 
 		tasks.unshift( newTask );
+
+		if(subTask) {
+			subTaskList.push(newTask.id);
+		}
+
 		console.log('Added:');
-		listTask(newTask);
+		getTask(newTask);
 	}
 	else {
 		console.log('no task name given');
@@ -167,7 +218,7 @@ var addTask = function addTask() {
 
 var removeTask = function removeTask() {
 	var taskID = parseInt(passedData, 10);
-	var task = _.findWhere(tasks, {id: taskID});
+	var task = findTaskByID(taskID);
 	var taskIndex = tasks.indexOf(task);
 
 	if(task) {
@@ -175,7 +226,7 @@ var removeTask = function removeTask() {
 	}
 
 	console.log('Removing:');
-	listTask(task);
+	getTask(task);
 };
 
 /**
@@ -185,14 +236,14 @@ var removeTask = function removeTask() {
  */
 var closeTask = function closeTask() {
 	var taskID = parseInt(passedData, 10);
-	var task = _.findWhere(tasks, {id: taskID});
+	var task = findTaskByID(taskID);
 
 	if(task) {
 		task.open = false;
 	}
 
 	console.log('closing:');
-	listTask(task);
+	getTask(task);
 };
 
 // Start the program
