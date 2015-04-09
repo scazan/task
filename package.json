@@ -1,0 +1,22 @@
+{
+  "name": "tasks",
+  "version": "1.0.0",
+  "description": "Task management system that supports sub tasks, command line use, and synchronization with my phone.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scazan/tasks.git"
+  },
+  "author": "Scott Cazan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scazan/tasks/issues"
+  },
+  "homepage": "https://github.com/scazan/tasks",
+  "dependencies": {
+    "underscore": "^1.8.3"
+  }
+}
