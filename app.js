@@ -1,7 +1,7 @@
 
 var fs = require('fs'),
 	_ = require('underscore'),
-	taskFile = "PATHTOTASKS.JSON/tasks.json",
+	taskFile = "/home/ADDUSERNAMEHERE/tasks.json",
 	tasks,
 	command = process.argv[2],
 	passedData = process.argv[3],
@@ -31,6 +31,7 @@ var executeCommands = function executeCommands() {
 			break;
 
 		case "add":
+		case "a":
 			addTask();
 			break;
 
@@ -39,7 +40,12 @@ var executeCommands = function executeCommands() {
 			break;
 
 		case "X":
+		case "close":
 			closeTask();
+			break;
+
+		case "edit":
+			editTask();
 			break;
 
 		default:
@@ -214,6 +220,21 @@ var addTask = function addTask() {
 		console.log('no task name given');
 	}
 
+};
+
+var editTask = function editTask() {
+	var taskID = parseInt( passedData, 10 ),
+		params = parseInputData(process.argv[4]);
+
+	var task = findTaskByID(taskID);
+
+	if(task) {
+		_.extend(task, params);
+		getTask(task);
+	}
+	else {
+		console.log('No task found with that ID');
+	}
 };
 
 var removeTask = function removeTask() {
