@@ -250,6 +250,14 @@ var editTask = function editTask() {
 
 	var task = findTaskByID(taskID);
 
+	// Concatenate name or description if indicated
+	if(params.description && params.description[0] === "+") {
+		params.description = task.description + " " + params.description;
+	}
+	if(params.name && params.name[0] === "+") {
+		params.name = task.name + " " + params.name;
+	}
+
 	if(task) {
 		_.extend(task, params);
 		getTask(task);
