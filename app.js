@@ -1,7 +1,7 @@
 
 var fs = require('fs'),
 	_ = require('underscore'),
-	taskFile = "/home/ADDUSERNAMEHERE/tasks.json",
+	taskFile = process.env.HOME + "/tasks.json",
 	tasks,
 	command = process.argv[2],
 	passedData = process.argv[3],
