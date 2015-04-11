@@ -152,13 +152,18 @@ var getTasks = function getTasks() {
 var getTask = function getTask(task) {
 	var openClosed = "";
 
+	// if the task is closed, don't print details
 	if(!task.open) {
 		openClosed = "×";
+		console.log(clc.blackBright(openClosed + "  " + task.id + " - " + task.name));
 	}
+	else {
+		process.stdout.write(clc.blackBright("  [" + task.id + "]") + clc.cyan(" - " + task.name) );
+		task.dueDate && process.stdout.write( clc.redBright("	(" + task.dueDate + ")"));
+		process.stdout.write("\n");
 
-	console.log(clc.cyan(openClosed + "  " + task.id + " - " + task.name));
-	task.description && console.log("	" + task.description);
-	task.dueDate && console.log(clc.redBright("	" + task.dueDate));
+		task.description && process.stdout.write(clc.blackBright("	" + task.description) + "\n");
+	}
 };
 
 var findTaskByID = function findTaskByID(taskID) {
