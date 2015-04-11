@@ -150,20 +150,27 @@ var getTasks = function getTasks() {
  * @return {undefined}
  */
 var getTask = function getTask(task) {
-	var openClosed = "";
+	var openClosed = "",
+		subTasksExist = false;
+
+	if(task.subTasks.length > 0) {
+		subTasksExist = true;
+	}
 
 	// if the task is closed, don't print details
 	if(!task.open) {
 		openClosed = "×";
-		console.log(clc.blackBright(openClosed + "  " + task.id + " - " + task.name));
+		console.log(clc.blackBright.strike(openClosed + "  " + task.id + " - " + task.name));
 	}
 	else {
-		process.stdout.write(clc.blackBright("  [" + task.id + "]") + clc.cyan(" - " + task.name) );
+		process.stdout.write(clc.blackBright("  [" + task.id + "]" + " - ") + clc.cyan.underline(task.name) );
 		task.dueDate && process.stdout.write( clc.redBright("	(" + task.dueDate + ")"));
+		subTasksExist && process.stdout.write( clc.cyan(" [+]"));
 		process.stdout.write("\n");
 
 		task.description && process.stdout.write(clc.blackBright("	" + task.description) + "\n");
 	}
+	process.stdout.write("\n");
 };
 
 var findTaskByID = function findTaskByID(taskID) {
