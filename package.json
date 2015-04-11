@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/scazan/tasks",
   "dependencies": {
+    "cli-color": "^0.3.3",
     "underscore": "^1.8.3"
   }
 }

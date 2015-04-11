@@ -1,6 +1,7 @@
 
 var fs = require('fs'),
 	_ = require('underscore'),
+	clc = require('cli-color'),
 	taskFile = process.env.HOME + "/tasks.json",
 	tasks,
 	command = process.argv[2],
@@ -51,6 +52,10 @@ var executeCommands = function executeCommands() {
 
 		case "edit":
 			editTask();
+			break;
+
+		case "move":
+			moveTask();
 			break;
 
 		default:
@@ -151,9 +156,9 @@ var getTask = function getTask(task) {
 		openClosed = "×";
 	}
 
-	console.log(openClosed + "  " + task.id + " - " + task.name);
+	console.log(clc.cyan(openClosed + "  " + task.id + " - " + task.name));
 	task.description && console.log("	" + task.description);
-	task.dueDate && console.log("	" + task.dueDate);
+	task.dueDate && console.log(clc.redBright("	" + task.dueDate));
 };
 
 var findTaskByID = function findTaskByID(taskID) {
@@ -240,6 +245,10 @@ var editTask = function editTask() {
 	else {
 		console.log('No task found with that ID');
 	}
+};
+
+var moveTask = function() {
+
 };
 
 var removeTask = function removeTask() {
