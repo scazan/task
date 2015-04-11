@@ -5,8 +5,6 @@ My own simple hacked together task management system as I couldn't find one that
 touch ~/tasks.json
 ```
 
-* Go edit app.js to replace your username where it says "ADDUSERNAMEHERE"
-
 ## Use
 
 Adding:
@@ -34,7 +32,7 @@ task rm 12
 
 Marking complete:
 ```
-task X 8
+task x 8
 task close 8
 ```
 
