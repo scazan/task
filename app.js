@@ -120,6 +120,7 @@ var getTasks = function getTasks() {
 		taskList = findTaskByID( parseInt(passedData, 10) );
 
 		if(taskList) {
+			process.stdout.write(clc.redBright("\n" + taskList.name + "\n\n") );
 			taskList = taskList.subTasks;
 		}
 		else {
