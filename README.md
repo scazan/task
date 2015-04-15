@@ -3,22 +3,25 @@ My own task management system as I couldn't find one that fits my needs. Uses my
 
 Uses a simple json file so it can be consumed via a number of other interfaces (command line, phone, web, etc) . Supports subtasks, deadlines, single subtasks assigned to multiple tasks, and all the normal things a task manager does.
 
+To install, download this repository (or git clone it) and in the directory:
 ```
 touch ~/tasks.json
+npm install
 ```
 
 ## Use
 
-Adding:
-```
-task add "name:some name, description:some descriptive text here, url: http://www.google.com"
-```
 Listing:
 ```
 task 
 task ls
 task ls a
 task ls all
+```
+
+Adding:
+```
+task add "name:some name, description:some descriptive text here, url: http://www.google.com"
 ```
 
 Sub tasks (for example on task id 8):
