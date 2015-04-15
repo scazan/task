@@ -9,7 +9,14 @@ touch ~/tasks.json
 npm install
 ```
 
+To use globally, add the directory to your path:
+```
+export PATH=/path/to/this/directory:$PATH
+```
+
+
 ## Use
+I've added in a shortcut for task that uses the letter t in place of any reference to task in the following (ie. 't ls" or "t add "name:blah"')
 
 Listing:
 ```
