@@ -3,25 +3,8 @@ var fs = require('fs'),
 	_ = require('underscore'),
 	clc = require('cli-color'),
 	taskEngine = require('taskengine')(),
-	taskFile = process.env.HOME + "/tasks.json",
-	tasks,
 	command = process.argv[2],
-	passedData = process.argv[3],
-	largestID = 0,
-	defaultTask = {
-		id: -1,
-		open: true,
-		name: "",
-		sort: 0,
-		description: "",
-		url: "",
-		dueDate: 0,
-		scheduledDate: 0,
-		dateAdded: 0,
-		comments: "",
-		subTasks: [],
-		priority: 0,
-	};
+	passedData = process.argv[3];
 
 var init = function init() {
 
