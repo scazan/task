@@ -33,25 +33,25 @@ var executeCommands = function executeCommands() {
 
 	switch( command.toLowerCase() ) {
 		case "ls":
-			getTasks();
+			getTasks(passedData);
 			break;
 
 		case "add":
 		case "a":
-			addTask();
+			addTask(passedData);
 			break;
 
 		case "rm":
-			removeTask();
+			removeTask(passedData);
 			break;
 
 		case "x":
 		case "close":
-			closeTask();
+			closeTask(passedData);
 			break;
 
 		case "edit":
-			editTask();
+			editTask(passedData);
 			break;
 
 		case "move":
@@ -104,11 +104,11 @@ var writeTasks = function writeTasks() {
  *
  * @return {undefined}
  */
-var getTasks = function getTasks() {
+var getTasks = function getTasks(optionString) {
 	
 	var taskList;
 
-	if(passedData == "a" || passedData == "all") {
+	if(optionString == "a" || optionString == "all") {
 		taskList = tasks;
 
 		for(var i=0; i<taskList.length; i++) {
@@ -116,8 +116,8 @@ var getTasks = function getTasks() {
 			getTask(task);
 		}
 	}
-	else if(parseInt(passedData, 10) > -1) {
-		taskList = findTaskByID( parseInt(passedData, 10) );
+	else if(parseInt(optionString, 10) > -1) {
+		taskList = findTaskByID( parseInt(optionString, 10) );
 
 		if(taskList) {
 			process.stdout.write(clc.redBright("\n" + taskList.name + "\n\n") );
@@ -205,21 +205,21 @@ var parseInputData = function parseInputData(data) {
  *
  * @return {undefined}
  */
-var addTask = function addTask() {
+var addTask = function addTask(taskData) {
 	var subTaskList,
 		parsedData,
 		subTask = false;
 
-	if(passedData !== undefined) {
-		if(parseInt(passedData,10) > -1) {
-			subTaskList = findTaskByID(parseInt(passedData,10)).subTasks;
+	if(taskData !== undefined) {
+		if(parseInt(taskData,10) > -1) {
+			subTaskList = findTaskByID(parseInt(taskData,10)).subTasks;
 
 			// If we passed a number instead of data, use the 5th argument and add it as a subtask
 			parsedData = parseInputData(process.argv[4]);
 			subTask = true;
 		}
 		else {
-			parsedData = parseInputData(passedData);
+			parsedData = parseInputData(taskData);
 		}
 
 
@@ -245,9 +245,9 @@ var addTask = function addTask() {
 
 };
 
-var editTask = function editTask() {
-	var taskID = parseInt( passedData, 10 ),
-		params = parseInputData(process.argv[4]);
+var editTask = function editTask(taskID) {
+	taskID = parseInt( taskID, 10 );
+	var params = parseInputData(process.argv[4]);
 
 	var task = findTaskByID(taskID);
 
@@ -272,8 +272,8 @@ var moveTask = function() {
 
 };
 
-var removeTask = function removeTask() {
-	var taskID = parseInt(passedData, 10);
+var removeTask = function removeTask(taskID) {
+	taskID = parseInt(taskID, 10);
 	var task = findTaskByID(taskID);
 	var taskIndex = tasks.indexOf(task);
 
@@ -290,8 +290,8 @@ var removeTask = function removeTask() {
  *
  * @return {undefined}
  */
-var closeTask = function closeTask() {
-	var taskID = parseInt(passedData, 10);
+var closeTask = function closeTask(taskID) {
+	taskID = parseInt(taskID, 10);
 	var task = findTaskByID(taskID);
 
 	if(task) {
