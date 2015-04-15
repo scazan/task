@@ -3,7 +3,7 @@ My own task management system as I couldn't find one that fits my needs. Uses my
 
 Uses a simple json file so it can be consumed via a number of other interfaces (command line, phone, web, etc) . Supports subtasks, deadlines, single subtasks assigned to multiple tasks, and all the normal things a task manager does.
 
-To install, download this repository (or git clone it) into ~/dev/task (if you want to change that directory, just put it anywhere and edit the "task" file which is simply a bash script pointing to executable):
+To install, download this repository (or git clone it) into ~/dev/task (if you want to change that directory, just put it anywhere and edit the "task" file which is simply a bash script pointing to the executable):
 ```
 touch ~/tasks.json
 npm install
@@ -16,7 +16,7 @@ export PATH=/dev/task:$PATH
 
 
 ## Use
-I've added in a shortcut for task that uses the letter t in place of any reference to task in the following (ie. 't ls" or "t add "name:blah"')
+I've added in a shortcut for task that uses the letter t in place of any reference to task in the following (ie. 't ls' or 't add "name:blah" ')
 
 Listing:
 ```
