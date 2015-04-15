@@ -1,5 +1,7 @@
 # task
-My own task management system as I couldn't find one that fits my needs. Uses a simple json file so it can be consumed via a number of other interfaces (command line, phone, web, etc) . Supports subtasks, deadlines, single subtasks assigned to multiple tasks, and all the normal things a task manager does.
+My own task management system as I couldn't find one that fits my needs. Uses my taskengine library which is found here: https://github.com/scazan/taskengine
+
+Uses a simple json file so it can be consumed via a number of other interfaces (command line, phone, web, etc) . Supports subtasks, deadlines, single subtasks assigned to multiple tasks, and all the normal things a task manager does.
 
 ```
 touch ~/tasks.json
