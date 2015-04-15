@@ -103,7 +103,7 @@ var displayTasks = function displayTasks(options) {
 			displayTask(task);
 		}
 	}
-	else if(taskID) {
+	else if(taskID !== undefined) {
 		taskList = taskEngine.getTaskByID( taskID );
 
 		if(taskList) {
