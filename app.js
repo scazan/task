@@ -19,6 +19,7 @@ var fs = require('fs'),
 		dateAdded: 0,
 		comments: "",
 		subTasks: [],
+		priority: 0,
 	};
 
 var init = function init() {
@@ -27,31 +28,38 @@ var init = function init() {
 
 var executeCommands = function executeCommands() {
 	if(!command) {
-		getTasks();
+		listAllTasks(passedData);
 		return;
 	}
 
 	switch( command.toLowerCase() ) {
 		case "ls":
-			getTasks(passedData);
+			listAllTasks(passedData);
 			break;
 
 		case "add":
 		case "a":
-			addTask(passedData);
+			displayTask( addTask(passedData, process.argv[4]) );
 			break;
 
 		case "rm":
-			removeTask(passedData);
+			displayTask( removeTask(passedData) );
 			break;
 
 		case "x":
 		case "close":
-			closeTask(passedData);
+			displayTask( closeTask(passedData) );
 			break;
 
 		case "edit":
-			editTask(passedData);
+			var editedTask = editTask(passedData, process.argv[4]);
+
+			if(editedTask) {
+				displayTask( editedTask );
+			}
+			else {
+				console.log('No task found with that ID');
+			}
 			break;
 
 		case "move":
@@ -59,9 +67,22 @@ var executeCommands = function executeCommands() {
 			break;
 
 		default:
-			getTasks();
+			listAllTasks(passedData);
 			break;
 	}
+};
+
+var listAllTasks = function listAllTasks(passedArgs) {
+	var options = {collection: tasks};
+
+	if(passedArgs == "a" || passedArgs == "all") {
+		options.all = true;
+	}
+	else if(parseInt(passedArgs, 10) > -1) {
+		options.taskID = parseInt(passedArgs, 10);
+	}
+
+	displayTasks(options);
 };
 
 /**
@@ -71,6 +92,7 @@ var executeCommands = function executeCommands() {
  */
 var exit = function exit() {
 	writeTasks();
+	//taskLib.close();
 };
 
 /**
@@ -104,20 +126,23 @@ var writeTasks = function writeTasks() {
  *
  * @return {undefined}
  */
-var getTasks = function getTasks(optionString) {
+var displayTasks = function displayTasks(options) {
 	
-	var taskList;
+	var taskList,
+		returnAll = options.all,
+		taskID = options.taskID,
+		tasksCollection = options.collection;
 
-	if(optionString == "a" || optionString == "all") {
-		taskList = tasks;
+	if(returnAll) {
+		taskList = tasksCollection;
 
 		for(var i=0; i<taskList.length; i++) {
 			var task = taskList[i];
-			getTask(task);
+			displayTask(task);
 		}
 	}
-	else if(parseInt(optionString, 10) > -1) {
-		taskList = findTaskByID( parseInt(optionString, 10) );
+	else if(taskID) {
+		taskList = getTaskByID( taskID );
 
 		if(taskList) {
 			process.stdout.write(clc.redBright("\n" + taskList.name + "\n\n") );
@@ -129,16 +154,16 @@ var getTasks = function getTasks(optionString) {
 
 		for(var i=0; i<taskList.length; i++) {
 			var taskID = taskList[i];
-			var task = findTaskByID(taskID);
-			task && getTask(task);
+			var task = getTaskByID(taskID);
+			task && displayTask(task);
 		}
 	}
 	else {
-		taskList = _.where(tasks, {open: true, subTask: false});
+		taskList = _.where(tasksCollection, {open: true, subTask: false});
 
 		for(var i=0; i<taskList.length; i++) {
 			var task = taskList[i];
-			getTask(task);
+			displayTask(task);
 		}
 	}
 
@@ -150,7 +175,7 @@ var getTasks = function getTasks(optionString) {
  * @param {object} task
  * @return {undefined}
  */
-var getTask = function getTask(task) {
+var displayTask = function displayTask(task) {
 	var openClosed = "",
 		subTasksExist = false;
 
@@ -174,7 +199,7 @@ var getTask = function getTask(task) {
 	process.stdout.write("\n");
 };
 
-var findTaskByID = function findTaskByID(taskID) {
+var getTaskByID = function getTaskByID(taskID) {
 	var task = _.findWhere(tasks, {id: taskID});
 
 	return task;
@@ -203,19 +228,21 @@ var parseInputData = function parseInputData(data) {
 /**
  * Add the given task to our array
  *
+ * @param taskData
+ * @param callback
  * @return {undefined}
  */
-var addTask = function addTask(taskData) {
+var addTask = function addTask(taskData, subTaskData) {
 	var subTaskList,
 		parsedData,
 		subTask = false;
 
 	if(taskData !== undefined) {
 		if(parseInt(taskData,10) > -1) {
-			subTaskList = findTaskByID(parseInt(taskData,10)).subTasks;
+			subTaskList = getTaskByID(parseInt(taskData,10)).subTasks;
 
 			// If we passed a number instead of data, use the 5th argument and add it as a subtask
-			parsedData = parseInputData(process.argv[4]);
+			parsedData = parseInputData(subTaskData);
 			subTask = true;
 		}
 		else {
@@ -237,19 +264,20 @@ var addTask = function addTask(taskData) {
 		}
 
 		console.log('Added:');
-		getTask(newTask);
+		return newTask;
 	}
 	else {
 		console.log('no task name given');
+		return false;
 	}
 
 };
 
-var editTask = function editTask(taskID) {
+var editTask = function editTask(taskID, params) {
 	taskID = parseInt( taskID, 10 );
-	var params = parseInputData(process.argv[4]);
+	params = parseInputData(params);
 
-	var task = findTaskByID(taskID);
+	var task = getTaskByID(taskID);
 
 	// Concatenate name or description if indicated
 	if(params.description && params.description[0] === "+") {
@@ -261,10 +289,11 @@ var editTask = function editTask(taskID) {
 
 	if(task) {
 		_.extend(task, params);
-		getTask(task);
+
+		return task;
 	}
 	else {
-		console.log('No task found with that ID');
+		return false;
 	}
 };
 
@@ -274,15 +303,19 @@ var moveTask = function() {
 
 var removeTask = function removeTask(taskID) {
 	taskID = parseInt(taskID, 10);
-	var task = findTaskByID(taskID);
+	var task = getTaskByID(taskID);
 	var taskIndex = tasks.indexOf(task);
 
 	if(task) {
 		tasks.splice(taskIndex, 1);
+
+		console.log('Removing:');
+		return task;
+	}
+	else {
+		return false;
 	}
 
-	console.log('Removing:');
-	getTask(task);
 };
 
 /**
@@ -292,14 +325,18 @@ var removeTask = function removeTask(taskID) {
  */
 var closeTask = function closeTask(taskID) {
 	taskID = parseInt(taskID, 10);
-	var task = findTaskByID(taskID);
+	var task = getTaskByID(taskID);
 
 	if(task) {
 		task.open = false;
+		console.log('closing:');
+
+		return task;
+	}
+	else {
+		return false;
 	}
 
-	console.log('closing:');
-	getTask(task);
 };
 
 // Start the program
