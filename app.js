@@ -107,7 +107,7 @@ var displayTasks = function displayTasks(options) {
 		taskList = taskEngine.getTaskByID( taskID );
 
 		if(taskList) {
-			process.stdout.write(clc.redBright("\n" + taskList.name + "\n\n") );
+			process.stdout.write(clc.redBright("\n" + "[" + taskList.id + "] - " +taskList.name + "\n\n") );
 			taskList = taskList.subTasks;
 		}
 		else {
