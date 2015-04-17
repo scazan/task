@@ -151,7 +151,7 @@ var displayTask = function displayTask(task) {
 		console.log(clc.blackBright.strike(openClosed + "  " + task.id + " - " + task.name));
 	}
 	else {
-		process.stdout.write(clc.blackBright("  [" + task.id + "]" + " - ") + clc.cyan.underline(task.name) );
+		process.stdout.write(clc.white("  [" + task.id + "]" + " - ") + clc.cyan.underline(task.name) );
 		task.dueDate && process.stdout.write( clc.redBright("	(" + task.dueDate + ")"));
 		subTasksExist && process.stdout.write( clc.cyan(" [+]"));
 		process.stdout.write("\n");
