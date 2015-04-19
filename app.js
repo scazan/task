@@ -27,7 +27,34 @@ var executeCommands = function executeCommands() {
 
 		case "add":
 		case "a":
-			displayTask( taskEngine.addTask(passedData, process.argv[4]) );
+			// Create an array of passed arguments
+			var inputData = [],
+				inputArgs = process.argv,
+				argumentIndex = 3; // The index of the first argument containing "data"
+
+			// If that first argument is an integer, then we are using it to indicate a subtask. Set the index +1 since that is where the data actually is
+			if(parseInt(process.argv[3], 10) ) {
+				argumentIndex = 4;
+			}
+
+			// Convert the arguments array into a real array. Only collect the arguments past (and including) the argumentIndex
+			for(var i=argumentIndex; i<=inputArgs.length-1; i++) {
+				inputData.push(inputArgs[i]);
+			}
+
+			inputData = inputData.join(" ");
+
+			// If we have a subtask pass the data as a subtask and the first piece of data as the task to add it to
+			if(argumentIndex > 3) {
+				var addedTask = taskEngine.addTask(passedData, inputData);
+			}
+			// otherwise, simply pass the input data
+			else {
+				var addedTask = taskEngine.addTask(inputData);
+			}
+
+			displayTask(addedTask);
+
 			break;
 
 		case "rm":
