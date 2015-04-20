@@ -28,12 +28,12 @@ task ls all
 
 Adding:
 ```
-task add "name:some name, description:some descriptive text here, url: http://www.google.com"
+task add name: some name description:some descriptive text here url: http://www.google.com
 ```
 
 Sub tasks (for example on task id 8):
 ```
-task add 8 "name:some name, description:some descriptive text here, url: http://www.google.com"
+task add 8 name: some name description:some descriptive text here url: http://www.google.com
 task ls 8
 ```
 
