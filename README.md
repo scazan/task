@@ -3,7 +3,7 @@ My own task management system as I couldn't find one that fits my needs. Uses my
 
 Uses a simple json file so it can be consumed via a number of other interfaces (command line, phone, web, etc) . Supports subtasks, deadlines, single subtasks assigned to multiple tasks, and all the normal things a task manager does.
 
-To install, download this repository (or git clone it) into ~/dev/task (if you want to change that directory, just put it anywhere and edit the "task" file which is simply a bash script pointing to the executable):
+To install, download this repository (or git clone it) into ~/dev/task-cli (if you want to change that directory, just put it anywhere and edit the "task" file which is simply a bash script pointing to the executable):
 ```
 touch ~/tasks.json
 npm install
@@ -11,7 +11,7 @@ npm install
 
 To use globally, add the directory to your path:
 ```
-export PATH=/dev/task:$PATH
+export PATH=/dev/task-cli:$PATH
 ```
 
 
@@ -28,12 +28,15 @@ task ls all
 
 Adding:
 ```
-task add name: some name description:some descriptive text here url: http://www.google.com
+task add name: some name description:some descriptive text here url: www.duckduckgo.com
+
+// Task properties can also be surrounded with quotes and separated by commas if that is more comfortable (like the following)
+task add "name: some name, description: some descriptive text here, url: www.duckduckgo.com"
 ```
 
 Sub tasks (for example on task id 8):
 ```
-task add 8 name: some name description:some descriptive text here url: http://www.google.com
+task add 8 name: some name description:some descriptive text here url: www.duckduckgo.com
 task ls 8
 ```
 
@@ -50,5 +53,5 @@ task close 8
 
 Editing:
 ```
-task edit 8 "url: http://www.duckduckgo.com"
+task edit 8 "url: www.duckduckgo.com"
 ```
