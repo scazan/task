@@ -15,10 +15,15 @@ var init = function init() {
 };
 
 var executeCommands = function executeCommands() {
+	// Print out the current date for reference
+	var currentDate = new Date();
+	process.stdout.write(clc.greenBright("\n" + currentDate.toDateString() + "\n\n") );
+
 	if(!command) {
 		listAllTasks(passedData);
 		return;
 	}
+
 
 	switch( command.toLowerCase() ) {
 		case "ls":
