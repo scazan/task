@@ -38,7 +38,7 @@ var executeCommands = function executeCommands() {
 				argumentIndex = 3; // The index of the first argument containing "data"
 
 			// If that first argument is an integer, then we are using it to indicate a subtask. Set the index +1 since that is where the data actually is
-			if(parseInt(process.argv[3], 10) ) {
+			if(parseInt(process.argv[3], 10) >= 0 ) {
 				argumentIndex = 4;
 			}
 
@@ -189,6 +189,7 @@ var displayTask = function displayTask(task) {
 		process.stdout.write("\n");
 
 		task.description && process.stdout.write(clc.blackBright("	" + task.description) + "\n");
+		task.url && process.stdout.write(clc.blackBright("	" + task.url) + "\n");
 	}
 	process.stdout.write("\n");
 };
